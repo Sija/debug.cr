@@ -1,0 +1,17 @@
+language: crystal
+
+crystal:
+  - latest
+  - nightly
+
+matrix:
+  allow_failures:
+    - crystal: nightly
+
+install:
+  - shards install
+
+script:
+  - crystal spec
+  - crystal tool format --check
+  - bin/ameba
