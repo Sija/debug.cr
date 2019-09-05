@@ -38,6 +38,11 @@ module Debug
           if ::Debug.settings.show_path?
             %relative_filepath = {{ file }}.lchop(Dir.current + "/")
             if %relative_filepath
+              if %max_path_length = ::Debug.settings.max_path_length
+                if %relative_filepath.size > %max_path_length
+                  %relative_filepath = "…" + %relative_filepath[-%max_path_length..]
+                end
+              end
               %str << "#{%relative_filepath}:{{ line }}".colorize(:dark_gray)
             end
 
