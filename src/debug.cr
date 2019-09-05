@@ -34,26 +34,31 @@ module Debug
           {% end %}
         }
 
+        %settings = ::Debug.settings
+        %colors = %settings.colors
+
         %str = String.build do |%str|
-          if ::Debug.settings.show_path?
+          if %settings.show_path?
             %relative_filepath = {{ file }}.lchop(Dir.current + "/")
             if %relative_filepath
-              if %max_path_length = ::Debug.settings.max_path_length
+              if %max_path_length = %settings.max_path_length
                 if %relative_filepath.size > %max_path_length
                   %relative_filepath = "…" + %relative_filepath[-%max_path_length..]
                 end
               end
-              %str << "#{%relative_filepath}:{{ line }}".colorize(:dark_gray)
+              %str << "#{%relative_filepath}:{{ line }}"
+                .colorize(%colors[:path])
             end
 
             %def_name = {{ @def && @def.name.stringify }}
             if %def_name
-              %str << " (#{%def_name})".colorize(:dark_gray)
+              %str << " (#{%def_name})"
+                .colorize(%colors[:method])
             end
             %str << " -- "
           end
 
-          if ::Debug.settings.show_backtrace?
+          if %settings.show_backtrace?
             %DEBUG_CALLER_PATTERN = /caller:Array\(String\)/i
             %caller_list = caller
 
@@ -69,7 +74,8 @@ module Debug
             {% end %}
 
             if %caller = %caller_list.first?
-              %str << %caller.colorize(:dark_gray)
+              %str << %caller
+                .colorize(%colors[:method])
               %str << " -- "
             end
           end
@@ -78,10 +84,12 @@ module Debug
             %exp, %val =
               %arg_expressions[{{ i }}], %arg_values[{{ i }}]
 
-            %str << %exp.colorize(:light_blue)
-            %str << " = ".colorize(:light_gray)
+            %str << %exp
+              .colorize(%colors[:expression])
+            %str << " = "
+              .colorize(%colors[:decorator])
             %val.to_debug(%str)
-            %str << " (" << typeof(%val).to_s.colorize(:green) << ") "
+            %str << " (" << typeof(%val).to_s.colorize(%colors[:type]) << ") "
           {% end %}
         end
 

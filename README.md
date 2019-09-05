@@ -46,6 +46,9 @@ You can change the global defaults by calling `Debug.configure` with a block:
 Debug.configure do |settings|
   settings.show_backtrace = true
   settings.show_path = true
+
+  settings.colors[:expression] = :magenta
+  settings.colors[:value] = :yellow
 end
 ```
 

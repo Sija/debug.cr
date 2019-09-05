@@ -1,6 +1,8 @@
 class Object
   def to_debug(io) : Nil
-    io << pretty_inspect(indent: 2).colorize(:white)
+    io << self
+      .pretty_inspect(indent: 2)
+      .colorize(Debug.settings.colors[:value])
   end
 
   def to_debug : String

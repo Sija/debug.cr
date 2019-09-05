@@ -1,8 +1,17 @@
 struct Pointer(T)
   def to_debug(io) : Nil
-    io << "0x#{address.to_s(16)}".colorize(:white)
+    colors = Debug.settings.colors
+
+    io << "0x#{address.to_s(16)}"
+      .colorize(colors[:value])
+
     unless null?
-      io << " <value: #{value.colorize(:light_gray)}>".colorize(:dark_gray)
+      io << " <value: "
+        .colorize(colors[:decorator])
+      io << value
+        .colorize(colors[:meta])
+      io << ">"
+        .colorize(colors[:decorator])
     end
   end
 end
