@@ -75,7 +75,7 @@ module Debug
 
             %str << %exp.colorize(:light_blue)
             %str << " = ".colorize(:light_gray)
-            %str << %val.pretty_inspect(indent: 2).colorize(:white)
+            %val.to_debug(%str)
             %str << " (" << typeof(%val).to_s.colorize(:green) << ") "
           {% end %}
         end

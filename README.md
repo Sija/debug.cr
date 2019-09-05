@@ -15,6 +15,7 @@ where you would typically write `puts …` or `pp …`, but with a few extras.
  * Easy to read, colorized output
  * Prints file name, line number, function name and the original expression
  * Adds type information for the printed-out value
+ * Specialized pretty-printers for selected classes and modules (like `Indexable`)
  * Can be used inside expressions
 
 ## Installation
@@ -45,6 +46,19 @@ You can change the global defaults by calling `Debug.configure` with a block:
 Debug.configure do |settings|
   settings.show_backtrace = true
   settings.show_path = true
+end
+```
+
+## Customization
+
+If you want `debug!(…)` to work for your custom class, you can simply overload
+`#to_debug(io)` method within your class.
+
+```crystal
+class Foo
+  def to_debug(io)
+    io << "Foo(@bar = " << @bar.to_s.colorize(:green) << ")"
+  end
 end
 ```
 
