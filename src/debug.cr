@@ -42,7 +42,8 @@ module Debug
             %arg_expressions[{{ i }}], %arg_values[{{ i }}]
 
           %str = String.build do |%str|
-            if %settings.show_path?
+            case %settings.location_detection
+            when .compile?
               %relative_filepath = {{ file }}.lchop(Dir.current + "/")
               if %relative_filepath
                 if %max_path_length = %settings.max_path_length
@@ -60,9 +61,8 @@ module Debug
                   .colorize(%colors[:method])
               end
               %str << " -- "
-            end
 
-            if %settings.show_backtrace?
+            when .runtime?
               %DEBUG_CALLER_PATTERN = /caller:Array\(String\)/i
               %caller_list = caller
 

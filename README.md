@@ -44,8 +44,7 @@ You can change the global defaults by calling `Debug.configure` with a block:
 
 ```crystal
 Debug.configure do |settings|
-  settings.show_backtrace = true
-  settings.show_path = true
+  settings.max_path_length = 100
 
   settings.colors[:expression] = :magenta
   settings.colors[:value] = :yellow

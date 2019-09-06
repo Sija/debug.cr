@@ -1,7 +1,12 @@
 module Debug
   class Settings
-    class_property? show_backtrace : Bool = false
-    class_property? show_path : Bool = true
+    enum LocationDetection
+      None
+      Compile
+      Runtime
+    end
+
+    class_property location_detection : LocationDetection = :compile
     class_property max_path_length : Int32? = 30
 
     class_getter colors = {
