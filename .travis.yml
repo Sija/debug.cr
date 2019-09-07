@@ -12,6 +12,7 @@ install:
   - shards install
 
 script:
+  - DEBUG=1 crystal spec
   - crystal spec
   - crystal tool format --check
   - bin/ameba
