@@ -34,11 +34,40 @@ where you would typically write `puts …` or `pp …`, but with a few extras.
 
 ```crystal
 require "debug"
+
+# You can use `debug!(...)` in expressions:
+def factorial(n : Int)
+  return debug!(1) if debug!(n <= 1)
+  debug!(n * factorial(n - 1))
+end
+
+message = "hello"
+debug!(message)
+
+a = 2
+b = debug!(3 * a) + 1
+
+numbers = {b, 13, 42}
+debug!(numbers)
+
+debug!("this line is executed")
+
+factorial(4)
 ```
 
-TODO: Write usage instructions here
+The code above produces this output:
+
+![debug!(…) macro output](https://i.imgur.com/tn0WnEL.png)
 
 ## Configuration
+
+- Make sure you compile your program with ENV variable `DEBUG` set to `1`
+  (for instance `DEBUG=1 shards build`). Otherwise all `debug!(…)` calls
+  will become a no-op.
+- Once your program is compiled, you need to pass `DEBUG=1` again on the
+  program start, in order to activate `debug!(…)` logging. Alternatively,
+  you can call `Debug.enabled = true` within your code to achieve the same
+  behaviour.
 
 You can change the global defaults by calling `Debug.configure` with a block:
 
