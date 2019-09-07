@@ -51,6 +51,22 @@ Debug.configure do |settings|
 end
 ```
 
+There's also `Debug::Logger.configure` method which allows you to change
+global defaults related to the logging itself.
+
+```crystal
+Debug::Logger.configure do |settings|
+  settings.show_severity = false
+  settings.show_datetime = true
+
+  settings.colors[:datetime] = :dark_gray
+  settings.colors[:progname] = :light_blue
+
+  settings.severity_colors[:debug] = :cyan
+  settings.severity_colors[:info] = :white
+end
+```
+
 ## Customization
 
 If you want `debug!(…)` to work for your custom class, you can simply overload
