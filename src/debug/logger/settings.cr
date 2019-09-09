@@ -1,5 +1,16 @@
 class Debug::Logger
   class Settings
+    private module LoggerDelegators
+      delegate :logger, :logger=, to: Debug
+      delegate :level, :progname, :progname=, to: :logger
+
+      def level=(level : ::Logger::Severity)
+        logger.level = level
+      end
+    end
+
+    extend LoggerDelegators
+
     class_property? show_severity : Bool = true
     class_property? show_datetime : Bool = false
     class_property? show_progname : Bool = true
