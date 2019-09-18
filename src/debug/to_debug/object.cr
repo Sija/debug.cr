@@ -6,6 +6,7 @@ class Object
   end
 
   def to_debug : String
-    String.build &->to_debug(IO)
+    # https://github.com/crystal-lang/crystal/issues/8198
+    String.build { |io| to_debug(io) }
   end
 end
