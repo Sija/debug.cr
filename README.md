@@ -30,6 +30,15 @@ where you would typically write `puts …` or `pp …`, but with a few extras.
 
 2. Run `shards install`
 
+3. Make sure you compile your program with ENV variable `DEBUG` set to `1`
+  (for instance `DEBUG=1 shards build`). Otherwise all `debug!(…)` calls
+  will become a no-op.
+
+4. Once your program is compiled, you need to pass `DEBUG=1` again on the
+  program start, in order to activate `debug!(…)` logging. Alternatively,
+  you can call `Debug.enabled = true` within your code to achieve the same
+  behaviour.
+
 ## Usage
 
 ```crystal
@@ -61,14 +70,6 @@ The code above produces this output:
 
 ## Configuration
 
-- Make sure you compile your program with ENV variable `DEBUG` set to `1`
-  (for instance `DEBUG=1 shards build`). Otherwise all `debug!(…)` calls
-  will become a no-op.
-- Once your program is compiled, you need to pass `DEBUG=1` again on the
-  program start, in order to activate `debug!(…)` logging. Alternatively,
-  you can call `Debug.enabled = true` within your code to achieve the same
-  behaviour.
-
 You can change the global defaults by calling `Debug.configure` with a block:
 
 ```crystal
@@ -85,8 +86,11 @@ global defaults related to the logging itself.
 
 ```crystal
 Debug::Logger.configure do |settings|
+  settings.progname = "foo.cr"
+
   settings.show_severity = false
   settings.show_datetime = true
+  settings.show_progname = true
 
   settings.colors[:datetime] = :dark_gray
   settings.colors[:progname] = :light_blue

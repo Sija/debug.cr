@@ -89,11 +89,17 @@ module Debug
                 end
               end
 
+              %str << '\n' if %exp['\n']?
               %str << %exp
                 .colorize(%colors[:expression])
+
               %str << " = "
                 .colorize(%colors[:decorator])
-              %val.to_debug(%str)
+
+              %val.to_debug.tap do |%pretty_val|
+                %str << '\n' if %pretty_val['\n']?
+                %str << %pretty_val
+              end
               %str << " (" << typeof(%val).to_s.colorize(%colors[:type]) << ')'
             end
 

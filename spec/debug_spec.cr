@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "./debug/**"
 
 class Foo
 end
