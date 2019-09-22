@@ -13,7 +13,51 @@ enum Baz
   Three
 end
 
+ENV_DEBUG_KEY = "DEBUG"
+
 describe Debug do
+  describe ".enabled?" do
+    it "should be true when ENV debug key is set to '1'" do
+      previous_env = ENV[ENV_DEBUG_KEY]?
+      begin
+        ENV[ENV_DEBUG_KEY] = "1"
+        Debug.enabled?.should be_true
+      ensure
+        ENV[ENV_DEBUG_KEY] = previous_env
+      end
+    end
+
+    it "should be false when ENV debug key is set to value other than '1'" do
+      previous_env = ENV[ENV_DEBUG_KEY]?
+      begin
+        ENV[ENV_DEBUG_KEY] = "10"
+        Debug.enabled?.should be_false
+      ensure
+        ENV[ENV_DEBUG_KEY] = previous_env
+      end
+    end
+
+    it "should be false when ENV debug key is unset" do
+      previous_env = ENV.delete(ENV_DEBUG_KEY)
+      begin
+        Debug.enabled?.should be_false
+      ensure
+        ENV[ENV_DEBUG_KEY] = previous_env
+      end
+    end
+
+    it "setting explicit (non-nil) value should have priority over ENV" do
+      previous_env = ENV.delete(ENV_DEBUG_KEY)
+      begin
+        Debug.enabled = true
+        Debug.enabled?.should be_true
+      ensure
+        ENV[ENV_DEBUG_KEY] = previous_env
+        Debug.enabled = nil
+      end
+    end
+  end
+
   context "with literals" do
     it "works with Nil" do
       assert_debug nil
