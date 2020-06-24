@@ -1,4 +1,4 @@
-require "logger"
+require "log"
 require "colorize"
 
 module Debug
@@ -18,8 +18,7 @@ module Debug
   end
 
   macro log(*args,
-            severity = Logger::Severity::DEBUG,
-            progname = nil,
+            severity = :debug,
             backtrace_offset = 0,
             file = __FILE__,
             line = __LINE__)
@@ -49,14 +48,14 @@ module Debug
             %str = String.build do |%str|
               case %settings.location_detection
               when .compile?
-                %relative_filepath = {{ file }}.lchop(Dir.current + "/")
-                if %relative_filepath
+                %relative_path = Path[{{ file }}].relative_to(Dir.current).to_s
+                if %relative_path
                   if %max_path_length = %settings.max_path_length
-                    if %relative_filepath.size > %max_path_length
-                      %relative_filepath = "…" + %relative_filepath[-%max_path_length..]
+                    if %relative_path.size > %max_path_length
+                      %relative_path = "…" + %relative_path[-%max_path_length..]
                     end
                   end
-                  %str << "#{%relative_filepath}:{{ line }}"
+                  %str << "#{%relative_path}:{{ line }}"
                     .colorize(%colors[:path])
                 end
 
@@ -103,7 +102,7 @@ module Debug
               %str << " (" << typeof(%val).to_s.colorize(%colors[:type]) << ')'
             end
 
-            ::Debug.logger.log({{ severity }}, %str, {{ progname }})
+            ::Debug.logger.{{ severity.id }} { %str }
           {% end %}
         end
       {% end %}

@@ -1,4 +1,5 @@
 require "spec"
+require "log/spec"
 require "../src/debug"
 
 Debug.configure do |settings|
@@ -9,31 +10,28 @@ end
 macro assert_debug(exp, *, file = __FILE__, line = __LINE__)
   %ret = nil
 
-  %previous_logger = Debug.logger
-  begin
-    IO::Memory.new.tap do |io|
-      Debug.logger = Debug::Logger.new(io)
-      Debug.logger.tap do |logger|
-        %ret = debug!(value = {{ exp }})
+  ::Log.capture do |%logs|
+    %ret, %value =
+      debug!(__value__ = {{ exp }}),
+      __value__
 
-        case value
-        when Value     then %ret.should eq(value)
-        when Reference then %ret.should be(value)
-        end
-        %ret.should be_a(typeof(value))
-
-        if Debug::ACTIVE && Debug.enabled?
-          relative_filename = {{ file }}.lchop(Dir.current + "/")
-
-          io.to_s.should contain "#{relative_filename}:{{ line }}"
-          io.to_s.should contain {{ exp.stringify }}
-        else
-          io.to_s.should be_empty
-        end
-      end
+    case %value
+    when Value     then %ret.should eq %value
+    when Reference then %ret.should be %value
     end
-  ensure
-    Debug.logger = %previous_logger
+
+    %ret.should be_a typeof(%value)
+
+    if ::Debug::ACTIVE && ::Debug.enabled?
+      %relative_path = Path[{{ file }}].relative_to(Dir.current).to_s
+
+      %entry = %logs.check("whatever", &.nil?.!).entry?.should_not be_nil # here be dragons
+      %entry.severity.should eq ::Log::Severity::Debug
+      %entry.message.should contain "#{%relative_path}:{{ line }}"
+      %entry.message.should contain {{ exp.stringify }}
+    else
+      %logs.empty
+    end
   end
 
   %ret
