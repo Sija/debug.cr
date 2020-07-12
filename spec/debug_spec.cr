@@ -58,6 +58,33 @@ describe Debug do
     end
   end
 
+  it "passes :severity as Log::Entry#severity" do
+    next unless Debug.enabled?
+
+    ::Log.capture do |logs|
+      debug!("foo")
+      debug!("bar", severity: :trace)
+
+      logs.check :debug, /foo/
+      logs.next :trace, /bar/
+    end
+  end
+
+  it "passes :progname into Log::Entry#data" do
+    next unless Debug.enabled?
+
+    progname = "bar.cr"
+
+    ::Log.capture do |logs|
+      debug!("foo", progname: progname)
+
+      logs.check :debug, /foo/
+
+      entry = logs.entry?.should_not be_nil
+      entry.data[:progname]?.should eq(progname)
+    end
+  end
+
   context "with literals" do
     it "works with Nil" do
       assert_debug nil
