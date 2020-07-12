@@ -13,7 +13,9 @@ class Debug::Logger
 
     class_property? show_severity = true
     class_property? show_datetime = false
-    class_property? show_progname = false
+    class_property? show_progname = true
+
+    class_property progname : String?
 
     class_getter colors = {
       :datetime => :dark_gray,

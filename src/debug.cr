@@ -19,6 +19,7 @@ module Debug
 
   macro log(*args,
             severity = :debug,
+            progname = nil,
             backtrace_offset = 0,
             file = __FILE__,
             line = __LINE__)
@@ -42,11 +43,11 @@ module Debug
           %colors = %settings.colors
 
           {% for arg, i in args %}
-            ::Debug.logger.{{ severity.id }} do
+            ::Debug.logger.{{ severity.id }} do |%emitter|
               %exp, %val =
                 %arg_expressions[{{ i }}], %arg_values[{{ i }}]
 
-              String.build do |%str|
+              %ret = String.build do |%str|
                 case %settings.location_detection
                 when .compile?
                   %relative_path = Path[{{ file }}].relative_to(Dir.current).to_s
@@ -102,6 +103,8 @@ module Debug
                 end
                 %str << " (" << typeof(%val).to_s.colorize(%colors[:type]) << ')'
               end
+
+              %emitter.emit(%ret, progname: {{ progname }})
             end
           {% end %}
         end

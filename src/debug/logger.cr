@@ -9,7 +9,8 @@ module Debug
       if settings.show_datetime? && (timestamp = entry.timestamp)
         parts << "[#{timestamp.to_s.colorize(settings.colors[:datetime])}]"
       end
-      if settings.show_progname? && (progname = Log.progname.presence)
+      progname = entry.data[:progname]?.try(&.as_s?) || settings.progname
+      if settings.show_progname? && progname.presence
         parts << "[#{progname.colorize(settings.colors[:progname])}]"
       end
       unless parts.empty?

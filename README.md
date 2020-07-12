@@ -86,9 +86,11 @@ global defaults related to the logging itself.
 
 ```crystal
 Debug::Logger.configure do |settings|
+  settings.progname = "foo.cr"
+
   settings.show_severity = false
   settings.show_datetime = true
-  settings.show_progname = false
+  settings.show_progname = true
 
   settings.colors[:datetime] = :dark_gray
   settings.colors[:progname] = :light_blue
