@@ -2,18 +2,20 @@ class Debug::Logger
   class Settings
     private module LoggerDelegators
       delegate :logger, :logger=, to: Debug
-      delegate :level, :progname, :progname=, to: :logger
+      delegate :level, to: :logger
 
-      def level=(level : ::Logger::Severity)
+      def level=(level : Log::Severity)
         logger.level = level
       end
     end
 
     extend LoggerDelegators
 
-    class_property? show_severity : Bool = true
-    class_property? show_datetime : Bool = false
-    class_property? show_progname : Bool = true
+    class_property? show_severity = true
+    class_property? show_datetime = false
+    class_property? show_progname = true
+
+    class_property progname : String?
 
     class_getter colors = {
       :datetime => :dark_gray,
@@ -21,13 +23,14 @@ class Debug::Logger
     } of Symbol => Colorize::Color
 
     class_getter severity_colors = {
-      :unknown => :dark_gray,
-      :error   => :red,
-      :warn    => :light_red,
-      :info    => :blue,
-      :debug   => :green,
-      :fatal   => :magenta,
-    } of Logger::Severity => Colorize::Color
+      :trace  => :white,
+      :debug  => :green,
+      :info   => :blue,
+      :notice => :dark_gray,
+      :warn   => :light_red,
+      :error  => :red,
+      :fatal  => :magenta,
+    } of Log::Severity => Colorize::Color
   end
 
   class_getter settings = Settings

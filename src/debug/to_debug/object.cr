@@ -1,9 +1,5 @@
 class Object
-  def to_debug(io) : Nil
-    io << self
-      .pretty_inspect(indent: 2)
-      .colorize(Debug.settings.colors[:value])
-  end
+  abstract def to_debug(io) : Nil
 
   def to_debug : String
     # https://github.com/crystal-lang/crystal/issues/8198
