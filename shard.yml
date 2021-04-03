@@ -1,5 +1,5 @@
 name: debug
-version: 2.0.0
+version: 2.0.1
 
 authors:
   - Sijawusz Pur Rahnama <sija@sija.pl>
@@ -7,8 +7,8 @@ authors:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.13.0
+    version: ~> 0.14.0
 
-crystal: 0.35.0
+crystal: ">= 0.35.1"
 
 license: MIT

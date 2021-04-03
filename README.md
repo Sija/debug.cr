@@ -1,6 +1,6 @@
 # `debug!(…)`
 
-[![Build Status](https://travis-ci.com/Sija/debug.cr.svg?branch=master)](https://travis-ci.com/Sija/debug.cr) [![Releases](https://img.shields.io/github/release/Sija/debug.cr.svg)](https://github.com/Sija/debug.cr/releases) [![License](https://img.shields.io/github/license/Sija/debug.cr.svg)](https://github.com/Sija/debug.cr/blob/master/LICENSE)
+[![CI](https://github.com/Sija/debug.cr/actions/workflows/ci.yml/badge.svg)](https://github.com/Sija/debug.cr/actions/workflows/ci.yml) [![Releases](https://img.shields.io/github/release/Sija/debug.cr.svg)](https://github.com/Sija/debug.cr/releases) [![License](https://img.shields.io/github/license/Sija/debug.cr.svg)](https://github.com/Sija/debug.cr/blob/master/LICENSE)
 
 *A macro for `puts`-style debugging fans.*
 
