@@ -4,11 +4,11 @@ module Debug
   # codes, see this link:
   # [https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
   MDEBUG_COLORS = {
-    :severity => "82",
+    :severity  => "82",
     :separator => "230",
-    :file => "8",
-    :lineno => "8",
-    :message => "15"
+    :file      => "8",
+    :lineno    => "8",
+    :message   => "15",
   }
 end
 
