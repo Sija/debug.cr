@@ -1,10 +1,10 @@
 module Debug
   private DEFAULT_FORMATTER = Log::Formatter.new do |entry, io|
-    parts = [] of String | Colorize::Object(String)
+    parts = [] of String
 
     Logger.settings.tap do |settings|
       if settings.show_severity? && (severity = entry.severity)
-        parts << severity.label.to_s.rjust(6).colorize(settings.severity_colors[severity])
+        parts << severity.label.to_s.rjust(6).colorize(settings.severity_colors[severity]).to_s
       end
       if settings.show_datetime? && (timestamp = entry.timestamp)
         parts << "[#{timestamp.to_s.colorize(settings.colors[:datetime])}]"
