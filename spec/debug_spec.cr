@@ -64,24 +64,24 @@ describe Debug do
     ::Log.capture do |logs|
       debug!("foo")
       debug!("bar", severity: :trace)
+      debug!("baz", severity: :info)
 
       logs.check :debug, /foo/
       logs.next :trace, /bar/
+      logs.next :info, /baz/
     end
   end
 
   it "passes :progname into Log::Entry#data" do
     next unless Debug.enabled?
 
-    progname = "bar.cr"
-
     ::Log.capture do |logs|
-      debug!("foo", progname: progname)
+      debug!("foo", progname: "bar.cr")
 
       logs.check :debug, /foo/
 
       entry = logs.entry?.should_not be_nil
-      entry.data[:progname]?.should eq(progname)
+      entry.data[:progname]?.should eq("bar.cr")
     end
   end
 
@@ -97,6 +97,7 @@ describe Debug do
 
     it "works with Float" do
       assert_debug 1.23
+      assert_debug 1.23_f32
     end
 
     it "works with Bool" do
@@ -121,6 +122,19 @@ describe Debug do
 
     it "works with Array" do
       assert_debug [1, 2, 3]
+    end
+
+    it "works with Set" do
+      assert_debug Set{1, 2, 3}
+    end
+  end
+
+  context "with Iterable-s" do
+    it "works with Range" do
+      assert_debug(0..10)
+      assert_debug(0..)
+      assert_debug(..10)
+      assert_debug(..)
     end
   end
 
