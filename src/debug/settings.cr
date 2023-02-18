@@ -22,7 +22,7 @@ module Debug
 
   class_getter settings = Settings
 
-  def self.configure : Nil
+  def self.configure(&) : Nil
     yield settings
   end
 end
