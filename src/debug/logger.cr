@@ -1,5 +1,7 @@
 module Debug
-  private DEFAULT_FORMATTER = Log::Formatter.new do |entry, io|
+  Log = ::Log.for("debug")
+
+  private DEFAULT_FORMATTER = ::Log::Formatter.new do |entry, io|
     parts = [] of String
 
     Logger.settings.tap do |settings|
@@ -20,11 +22,10 @@ module Debug
     end
   end
 
-  class_property logger : Log do
-    backend = Log::IOBackend.new(STDOUT, formatter: DEFAULT_FORMATTER)
+  ::Log.setup do |c|
+    backend = ::Log::IOBackend.new(STDOUT, formatter: DEFAULT_FORMATTER)
 
-    Log.builder.bind("debug.*", :trace, backend)
-    Log.for("debug")
+    c.bind "debug.*", :trace, backend
   end
 end
 

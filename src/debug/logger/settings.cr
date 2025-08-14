@@ -30,7 +30,7 @@ class Debug::Logger
       :warn   => :light_red,
       :error  => :red,
       :fatal  => :magenta,
-    } of Log::Severity => Colorize::Color
+    } of ::Log::Severity => Colorize::Color
   end
 
   class_getter settings = Settings

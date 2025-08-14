@@ -43,7 +43,7 @@ module Debug
           %colors = %settings.colors
 
           {% for arg, i in args %}
-            ::Debug.logger.{{ severity.id }} do |%emitter|
+            ::Debug::Log.{{ severity.id }} do |%emitter|
               %exp, %val =
                 %arg_expressions[{{ i }}], %arg_values[{{ i }}]
 
