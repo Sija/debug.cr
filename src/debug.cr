@@ -104,7 +104,11 @@ module Debug
                 %str << " (" << typeof(%val).to_s.colorize(%colors[:type]) << ')'
               end
 
-              %emitter.emit(%ret, progname: {{ progname }})
+              if %progname = {{ progname }}.presence
+                %emitter.emit(%ret, progname: %progname)
+              else
+                %emitter.emit(%ret)
+              end
             end
           {% end %}
         end
