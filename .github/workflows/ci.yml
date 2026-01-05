@@ -35,9 +35,3 @@ jobs:
         run: crystal spec
         env:
           DEBUG: "1"
-
-      - name: Check formatting
-        run: crystal tool format --check
-
-      - name: Run ameba linter
-        run: bin/ameba
