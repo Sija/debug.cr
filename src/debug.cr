@@ -2,6 +2,9 @@ require "log"
 require "colorize"
 
 module Debug
+  # :nodoc:
+  CALLER_PATTERN = /caller:Array\(String\)/i
+
   {% begin %}
     ACTIVE = {{ env("DEBUG") == "1" }}
   {% end %}
@@ -69,11 +72,10 @@ module Debug
                   %str << " -- "
 
                 when .runtime?
-                  %DEBUG_CALLER_PATTERN = /caller:Array\(String\)/i
                   %caller_list = caller
 
-                  if %caller_list.any?(&.match(%DEBUG_CALLER_PATTERN))
-                    while !%caller_list.empty? && %caller_list.first? !~ %DEBUG_CALLER_PATTERN
+                  if %caller_list.any?(::Debug::CALLER_PATTERN)
+                    while !%caller_list.empty? && %caller_list.first? !~ ::Debug::CALLER_PATTERN
                       %caller_list.shift?
                     end
                     %caller_list.shift?
