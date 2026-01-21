@@ -27,10 +27,26 @@ describe Debug do
       end
     end
 
-    it "should be false when ENV debug key is set to value other than '1'" do
+    it "should be true when ENV debug key is set to other shell-truthy values" do
       previous_env = ENV[ENV_DEBUG_KEY]?
       begin
-        ENV[ENV_DEBUG_KEY] = "10"
+        ENV[ENV_DEBUG_KEY] = "true"
+        Debug.enabled?.should be_true
+
+        ENV[ENV_DEBUG_KEY] = "123"
+        Debug.enabled?.should be_true
+      ensure
+        ENV[ENV_DEBUG_KEY] = previous_env
+      end
+    end
+
+    it "should be false when ENV debug key is set to value other shell-falsey values" do
+      previous_env = ENV[ENV_DEBUG_KEY]?
+      begin
+        ENV[ENV_DEBUG_KEY] = "false"
+        Debug.enabled?.should be_false
+
+        ENV[ENV_DEBUG_KEY] = ""
         Debug.enabled?.should be_false
       ensure
         ENV[ENV_DEBUG_KEY] = previous_env
@@ -83,6 +99,11 @@ describe Debug do
       entry = logs.entry?.should_not be_nil
       entry.data[:progname]?.should eq("bar.cr")
     end
+  end
+
+  it "prints debug statements at the macro level" do
+    result = {{ system("./spec/macro_debug.sh").stringify }}
+    result.should match(/This is a message/)
   end
 
   context "with literals" do

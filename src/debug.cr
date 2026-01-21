@@ -6,19 +6,19 @@ module Debug
   CALLER_PATTERN = /caller:Array\(String\)/i
 
   {% begin %}
-    ACTIVE = {{ env("DEBUG") == "1" }}
-  {% end %}
+    ACTIVE = {{ flag?(:DEBUG) || (env("DEBUG") && env("DEBUG") != "0" && env("DEBUG") != "false" && env("DEBUG") != "") }}
 
-  class_property? enabled : Bool?
+    class_property? enabled : Bool?
 
-  def self.enabled? : Bool
-    case enabled = @@enabled
-    when Nil
-      ENV["DEBUG"]? == "1"
-    else
-      enabled
+    def self.enabled? : Bool
+      case enabled = @@enabled
+      when Nil
+        !!({{ flag?(:DEBUG) }} || (ENV["DEBUG"]? && ENV["DEBUG"] != "0" && ENV["DEBUG"] != "false" && ENV["DEBUG"].presence))
+      else
+        enabled
+      end
     end
-  end
+  {% end %}
 
   macro log(*args,
             severity = :debug,
@@ -125,4 +125,5 @@ module Debug
   end
 end
 
+require "./macro_debug"
 require "./debug/**"
