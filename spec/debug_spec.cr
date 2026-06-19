@@ -148,7 +148,7 @@ describe Debug do
   context "with side-effects" do
     it do
       i = 1
-      assert_debug(i += 1)
+      assert_debug(i += 1) # ameba:disable Lint/AssignmentInCallArgument
       i.should eq(2)
     end
 
